@@ -25,7 +25,7 @@ ChallengeResponseAuthentication no
 
 X11DisplayOffset 10
 PrintMotd no
-PrintLastLog yes
+#PrintLastLog yes
 TCPKeepAlive yes
 AcceptEnv LANG LC_*
 

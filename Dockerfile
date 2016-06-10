@@ -1,25 +1,20 @@
-FROM ubuntu:14.04
+FROM alpine:latest
 MAINTAINER ATSD Developers <dev-atsd@axibase.com>
 ENV ftpuser="ftp-user"
 
-RUN apt-get update && apt-get upgrade && \
-    apt-get install -y vsftpd openssh-server curl && \
-    groupadd ftpaccess && \
+RUN apk add --no-cache openssh && \
+    addgroup ftpaccess && \
     mkdir -p /home/${ftpuser}/ftp && \
-    mkdir -p /var/run/sshd && \
-    useradd -m ${ftpuser} -g ftpaccess -s /usr/sbin/nologin && \
-    chown ${ftpuser}:ftpaccess /home/${ftpuser}/ftp && \
-    echo "/usr/sbin/nologin" >> /etc/shells
+    adduser -D -G ftpaccess -s /usr/sbin/nologin ${ftpuser} && \
+    chown root:root /home/${ftpuser} && \
+    chown ${ftpuser}:ftpaccess /home/${ftpuser}/ftp
 
-RUN curl -L -o /opt/entrypoint.sh https://raw.githubusercontent.com/axibase/dockers/sftp/entrypoint.sh && \
-    chmod +x /opt/entrypoint.sh && \
-    curl -L -o /etc/ssh/sshd_config https://raw.githubusercontent.com/axibase/dockers/sftp/sshd_config
-    
+ADD entrypoint.sh /opt/entrypoint.sh
+ADD sshd_config /etc/ssh/sshd_config 
 
 WORKDIR /home/${ftpuser}
 
 #sftp
 EXPOSE 22
 VOLUME ["/home/${ftpuser}"]
-ENTRYPOINT ["/opt/entrypoint.sh"]
- 
+ENTRYPOINT ["/bin/sh", "/opt/entrypoint.sh"]
