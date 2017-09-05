@@ -18,7 +18,6 @@ RUN apt-key adv --keyserver hkp://keyserver.ubuntu.com --recv-keys 26AEE425A5796
   && apt-get install --no-install-recommends -y atsd=${version}  && rm -rf /var/lib/apt/lists/*;
 
 #set hbase distributed mode false
-USER axibase
 RUN sed -i '/.*hbase.cluster.distributed.*/{n;s/.*/   <value>false<\/value>/}' /opt/atsd/hbase/conf/hbase-site.xml
 
 #jmx, atsd(tcp), atsd(udp), pickle, http, https
