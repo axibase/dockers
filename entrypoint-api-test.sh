@@ -38,8 +38,9 @@ logger "Files replaced."
 
 #check timezone
 if [ -n "$timezone" ]; then
-    echo "export JAVA_PROPERTIES=\"-Duser.timezone=$timezone \$JAVA_PROPERTIES\"" >> /opt/atsd/atsd/conf/atsd-env.sh
+    echo "export JAVA_PROPERTIES=\"-Duser.timezone=$timezone \$JAVA_PROPERTIES\"" >> ${DISTR_HOME}/atsd/conf/atsd-env.sh
 fi
+echo "version.check=false" >> ${DISTR_HOME}/atsd/conf/server.properties
 
 #/opt/atsd/bin/atsd-dfs.sh start
 /opt/atsd/bin/atsd-hbase.sh start
