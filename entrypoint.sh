@@ -19,6 +19,11 @@ ATSD_COLLECTOR_USER_PASSWORD=collector
 COLLECTOR_USER_NAME=axibase
 COLLECTOR_USER_PASSWORD=axibase
 
+if [ -n "$IMPORT_PATHS" ]; then
+    ATSD_IMPORT_PATH=$(echo "$IMPORT_PATHS" | cut -d ";" -f 1)
+    COLLECTOR_IMPORT_PATH=$(echo "$IMPORT_PATHS" | cut -d ";" -f 2)
+fi
+
 function start_atsd {
     function set_tz {
         # set custom timezone
