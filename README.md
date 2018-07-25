@@ -1,28 +1,32 @@
-# Axibase Time Series Database
+# Official ATSD Docker Image
+
+![](./images/axibase-and-docker.png)
 
 ## Overview
 
-Axibase Time Series Database (ATSD) is a specialized database for storing and analyzing time series data.
+[Axibase Time Series Database](https://axibase.com/docs/atsd/) is a non-relational database optimized for collecting, storing, and analyzing temporal data from IT infrastructure, industrial equipment, smart meters, and IoT devices.
 
-ATSD provides the following tools for application developers and data scientists:
+ATSD provides several tools for application developers and data scientists:
 
-- Network API, CSV parsers, Storage Drivers, and Axibase Collector to collect time-series data.
-- Rest API and API clients for integration with Python, Java, Go, Ruby, NodeJS applications and R scripts.
-- SQL support with time-series extensions for scheduled and ad-hoc reporting.
-- Built-in declarative visualization library with 15 time-series widgets.
-- Rule engine with support for analytical rules and anomaly detection based on ARIMA and Holt-Winters forecasts.
+* [Network API](https://axibase.com/docs/atsd/api/network/), [CSV parsers](https://axibase.com/docs/atsd/parsers/csv/), [Storage Drivers](https://axibase.com/use-cases/integrations/cadvisor/), and [Axibase Collector](https://axibase.com/docs/axibase-collector/) to collect time series data.
+* [Rest API](https://axibase.com/docs/atsd/api/data/) and API clients for integration with Python, Java, Go, Ruby, NodeJS applications and R scripts.
+* [SQL Console](https://axibase.com/docs/atsd/sql/) with time series extensions for scheduled and ad-hoc reporting.
+* Built-in declarative [visualization library](https://github.com/axibase/charts/blob/master/README.md) with 15 time series widgets.
+* [Rule Engine](https://axibase.com/docs/atsd/rule-engine/) with support for analytical rules and anomaly detection based on ARIMA and Holt-Winters [forecasts](https://axibase.com/docs/atsd/forecasting/).
 
-Refer to [ATSD Documentation](https://axibase.com/docs/atsd/) for additional details.
+> Refer to [ATSD Documentation](https://axibase.com/docs/atsd/) for additional information.
 
 ## Image Summary
 
-* Image name: `axibase/atsd:latest`
-* Base Image: Ubuntu 16.04
+* Image Name: `axibase/atsd:latest`
+* Base Image: Ubuntu `16.04`
 * [Dockerfile](https://github.com/axibase/dockers/blob/master/Dockerfile)
 
-## Start Container
+## Launch Instructions
 
-```properties
+### Start Container
+
+```sh
 docker run \
   --detach \
   --name=atsd \
@@ -34,15 +38,15 @@ docker run \
   axibase/atsd:latest
 ```
 
-## Check Installation
+### Check Installation
 
-Watch for **ATSD start completed** message at the end of the `start.log` file.
+Watch for `ATSD start completed` message at the end of the `start.log` file.
 
-```
+```sh
 docker logs -f atsd
 ```
 
-```
+```txt
 [ATSD] Starting ATSD ...
 ...
 [ATSD] Waiting for ATSD to start. Checking ATSD user interface port 8088 ...
@@ -54,20 +58,20 @@ docker logs -f atsd
 [ATSD] ATSD start completed.
 ```
 
-The user interface is accessible on port `8443`/https.
+The user interface is accessible on HTTPS port `8443`.
 
-## Launch Parameters
+### Launch Parameters
 
 | **Name** | **Required** | **Description** |
 |:---|:---|:---|
-|`--detach` | Yes | Run container in background and print container id. |
+|`--detach` | Yes | Run container in the background and print container ID. |
 |`--hostname` | No | Assign hostname to the container. |
 |`--name` | No | Assign a unique name to the container. |
-|`--restart` | No | Auto-restart policy. _Not supported in all Docker Engine versions._ |
-|`--publish` | No | Publish a container's port to the host. |
-|`--env` | No | Define a new environment variable inside the container in _key=value_ format. |
+|`--restart` | No | Auto-restart policy. **Not supported in all Docker Engine versions.** |
+|`--publish` | No | Publish container port to the host. |
+|`--env` | No | Define [environment variables](#environment-variables) inside the container in `key=value` format. |
 
-## Environment Variables
+### Environment Variables
 
 | **Name** | **Required** | **Description** |
 |:---|:---|:---|
@@ -83,26 +87,26 @@ The user interface is accessible on port `8443`/https.
 
 View additional launch examples [here](https://axibase.com/docs/atsd/installation/docker.html).
 
-## Exposed Ports
+### Exposed Ports
 
 | **Name** | **Protocol** | **Description** |
 |:---|:---|:---|
-| 8088 | http | API, user interface. |
-| 8443 | https | API, user interface (secure). |
-| 8081 | tcp | Incoming [network commands](https://axibase.com/docs/atsd/api/network/#connection). |
-| 8082 | udp | Incoming [network commands](https://axibase.com/docs/atsd/api/network/#udp-datagrams). |
-| 8084 | tcp | Incoming Graphite commands in Python pickle format. |
-| 1099 | tcp | JMX |
+| `8088` | HTTP | API and user interface. |
+| `8443` | HTTPS | Secure API user interface. |
+| `8081` | TCP | Incoming [network commands](https://axibase.com/docs/atsd/api/network/#connection). |
+| `8082` | UDP | Incoming [network commands](https://axibase.com/docs/atsd/api/network/#udp-datagrams). |
+| `8084` | TCP | Incoming Graphite commands in Python pickle format. |
+| `1099` | TCP | JMX |
 
-## Troubleshooting
+### Troubleshooting
 
-* Review [Troubleshooting Guide](https://axibase.com/docs/atsd/installation/troubleshooting.html).
+Review [Troubleshooting Guide](https://axibase.com/docs/atsd/installation/troubleshooting.html).
 
-## Validation
+### Validation
 
-* [Verify installation](https://axibase.com/docs/atsd/installation/verifying-installation.html).
+[Verify installation](https://axibase.com/docs/atsd/installation/verifying-installation.html).
 
 ## Post-installation Steps
 
 * [Basic configuration](https://axibase.com/docs/atsd/installation/post-installation.html).
-* [Getting Started guide](hhttps://axibase.com/docs/atsd/tutorials/getting-started.html).
+* [Getting Started Guide](hhttps://axibase.com/docs/atsd/tutorials/getting-started.html).
