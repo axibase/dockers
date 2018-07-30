@@ -26,6 +26,7 @@ ADD server.properties /opt/atsd/atsd/conf/
 
 #custom entrypoint to api-test reason
 ADD entrypoint-api-test.sh /
+ADD form.data /
 
 RUN chown -R axibase:axibase /opt/atsd /entrypoint*
 

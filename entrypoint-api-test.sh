@@ -53,7 +53,9 @@ rm /opt/atsd/atsd/logs/err.log
 
 curl -i --data "userBean.username=$axiname&userBean.password=$axipass&repeatPassword=$axipass" http://127.0.0.1:8088/login
 curl -F "file=@/opt/atsd/rules.xml" -F "auto-enable=true" -F "replace=true" http://$axiname:$axipass@127.0.0.1:8088/rules/import
-curl -i -L -u ${axiname}:${axipass} --data "options%5B0%5D.key=last.insert.write.period.seconds&options%5B0%5D.value=0&apply=Save" http://127.0.0.1:8088/admin/serverproperties
+curl -i -L -u ${axiname}:${axipass} \
+ --data "@form.data" \
+  http://127.0.0.1:8088/admin/serverproperties
 
 while true; do
  sleep 5
