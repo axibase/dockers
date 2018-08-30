@@ -496,5 +496,3 @@ ls -lah *gz
 ```txt
 -rw-------  1 axibase  axibase   742M Jul  1 13:52 atsd-sandbox.tar.gz
 ```
-
-Pre-built image is available at [`axibase.com`](https://axibase.com/public/atsd-sandbox.tar.gz).
