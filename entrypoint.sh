@@ -30,6 +30,19 @@ if [ -n "$DB_TIMEZONE" ]; then
     echo "export JAVA_PROPERTIES=\"-Duser.timezone=$DB_TIMEZONE \$JAVA_PROPERTIES\"" >> /opt/atsd/atsd/conf/atsd-env.sh
 fi
 
+# format HDFS data directory
+if [ -n "$HDFS_FORMAT" ]; then
+    echo "[ATSD] Format HDFS data directory." | tee -a  $LOGFILESTART
+    for d in $(ls -A /opt/atsd/ | grep hdfs); do
+        if [ -n "$(ls -A /opt/atsd/${d})" ]; then
+            echo "[ATSD] Cannot proceed. Remove all files from /opt/atsd/${d}." | tee -a  $LOGFILESTART
+            exit 1
+        fi
+    done
+    ${DISTR_HOME}/hadoop/bin/hdfs namenode -format | tee -a  $LOGFILESTART
+    echo "[ATSD] HDFS data directory format is completed." | tee -a  $LOGFILESTART
+fi
+
 test_directory="${DISTR_HOME}/hdfs-data"
 firstStart="true"
 executing="true"
