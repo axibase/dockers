@@ -80,7 +80,7 @@ The user interface is accessible on port `8443`/https.
 |`JAVA_OPTS` | No | Additional arguments to be passed to ATSD JVM process. |
 |`HADOOP_OPTS` | No | Additional arguments to be passed to Hadoop/HDFS JVM processes. |
 |`HBASE_OPTS` | No | Additional arguments to be passed to HBase JVM processes. |
-|`HDFS_FORMAT`| No | If `true`, command `hdfs namenode -format` is executed during start up. Required when volumes mounting is used for data directories. Directories, mounted to `/opt/atsd/hdfs-data-name`, `/opt/atsd/hdfs-data` and `/opt/atsd/hdfs-cache`, must be empty. | 
+|`HDFS_FORMAT`| No | If `true`, command `hdfs namenode -format` is executed during startup. Required when volumes mounting is used for data directories. Directories, mounted to `/opt/atsd/hdfs-data-name`, `/opt/atsd/hdfs-data` and `/opt/atsd/hdfs-cache`, must be empty. | 
 
 View additional launch examples [here](https://axibase.com/docs/atsd/installation/docker.html).
 

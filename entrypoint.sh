@@ -33,9 +33,9 @@ fi
 # format HDFS data directory
 if [ -n "$HDFS_FORMAT" ]; then
     echo "[ATSD] Format HDFS data directory." | tee -a  $LOGFILESTART
-    for d in $(ls -A /opt/atsd/ | grep hdfs); do
-        if [ -n "$(ls -A /opt/atsd/${d})" ]; then
-            echo "[ATSD] Cannot proceed. Remove all files from /opt/atsd/${d}." | tee -a  $LOGFILESTART
+    for d in $(ls -A ${DISTR_HOME} | grep hdfs); do
+        if [ -n "$(ls -A ${DISTR_HOME}/${d})" ]; then
+            echo "[ATSD] Cannot proceed. Remove all files from ${DISTR_HOME}/${d}." | tee -a  $LOGFILESTART
             exit 1
         fi
     done
