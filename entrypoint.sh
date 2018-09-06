@@ -30,15 +30,28 @@ if [ -n "$DB_TIMEZONE" ]; then
     echo "export JAVA_PROPERTIES=\"-Duser.timezone=$DB_TIMEZONE \$JAVA_PROPERTIES\"" >> /opt/atsd/atsd/conf/atsd-env.sh
 fi
 
+format_log="${DISTR_HOME}/format.log"
 test_directory="${DISTR_HOME}/hdfs-data"
 firstStart="true"
 executing="true"
 
-if [ -d "$test_directory" ] && [ -n "$(ls -A ${test_directory})" ]; then
+if [ -d "$test_directory" ] && [ -n "$(ls -A ${test_directory})" ] && [ -s "${format_log}" ]; then
     firstStart="false"
 fi
 
 if [ "$firstStart" = "true" ]; then
+    # format HDFS data directory
+    if [ "$HDFS_FORMAT" = "true" ]; then
+        echo "[ATSD] Format HDFS data directory." | tee -a  $LOGFILESTART
+        for d in $(ls -A ${DISTR_HOME} | grep hdfs); do
+            if [ -n "$(ls -A ${DISTR_HOME}/${d})" ]; then
+                echo "[ATSD] Cannot proceed. Remove all files from ${DISTR_HOME}/${d}." | tee -a  $LOGFILESTART
+                exit 1
+            fi
+        done
+        ${DISTR_HOME}/hadoop/bin/hdfs namenode -format > ${format_log} | tee -a  $LOGFILESTART
+        echo "[ATSD] HDFS data directory format is completed." | tee -a  $LOGFILESTART
+    fi
     ${ATSD_ALL} start skipTest
 else
     ${ATSD_ALL} start
