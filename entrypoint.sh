@@ -12,7 +12,11 @@ ZOOKEEPER_DATA_DIR="${DISTR_HOME}/hbase/zookeeper"
 
 collectorUser="${COLLECTOR_USER_NAME}"
 collectorPassword="${COLLECTOR_USER_PASSWORD}"
-collectorType="${COLLECTOR_USER_TYPE}"
+if [ -n "$COLLECTOR_USER_TYPE" ]; then
+    collectorType="$COLLECTOR_USER_TYPE"
+else
+    collectorType="writer"
+fi
 
 if [ -n "$collectorPassword" ] && [ ${#collectorPassword} -lt 6 ]; then
     echo "[ATSD] Minimum password length for the collector account is 6 characters. Start cancelled." | tee -a $LOGFILESTART
