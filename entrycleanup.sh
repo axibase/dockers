@@ -41,6 +41,7 @@ echo "Stop all services"
 
 echo "Remove log files and temporary directories."
 
+rm -rf ./atsd/conf/license/*
 rm -rf ./atsd/logs/*
 rm -rf ./hbase/logs/*
 rm -rf ./hadoop/logs/*
