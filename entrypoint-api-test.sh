@@ -45,6 +45,7 @@ fi
 /opt/atsd/bin/atsd-hbase.sh start
 echo "delete 'atsd_counter', '__inst', 'type:t'" | /opt/atsd/hbase/bin/hbase shell
 
+rm /opt/atsd/atsd/conf/license/*
 rm /opt/atsd/atsd/logs/atsd.log
 rm /opt/atsd/atsd/logs/command*.log
 rm /opt/atsd/atsd/logs/err.log
