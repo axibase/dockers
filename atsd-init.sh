@@ -24,8 +24,9 @@ function stop_services {
     ./bin/atsd-hbase.sh stop
     ./bin/atsd-dfs.sh stop
 
-    echo "Remove log files and temporary directories."
+    echo "Remove log files, license files, and temporary directories."
 
+    rm -rf ./atsd/conf/license/*
     rm -rf ./atsd/logs/*
     rm -rf ./hbase/logs/*
     rm -rf ./hadoop/logs/*
