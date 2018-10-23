@@ -399,6 +399,8 @@ function prepare_import {
         fi
         if [ -n "$SLACK_CHANNELS" ]; then
             configure_slack_form_field "" "" "channels" "$SLACK_CHANNELS"
+        else
+            configure_slack_form_field "" "" "channels" "general"
         fi
 
         if [ -n "$TELEGRAM_BOT_TOKEN" ]; then
@@ -728,10 +730,12 @@ function start_atsd {
                 --data-urlencode "contentType=application/x-www-form-urlencoded" \
                 --data-urlencode "parameterModels[0].key=token" \
                 --data-urlencode "parameterModels[0].value=${slack_form["token"]}" \
-                --data-urlencode "parameterModels[1].key=channels" \
-                --data-urlencode "parameterModels[1].value=${slack_form["channels"]}" \
-                --data-urlencode "parameterModels[2].exposed=on" \
-                --data-urlencode "parameterModels[2].key=text" \
+                --data-urlencode "parameterModels[1].key=username" \
+                --data-urlencode "parameterModels[1].value=" \
+                --data-urlencode "parameterModels[2].key=channels" \
+                --data-urlencode "parameterModels[2].value=${slack_form["channels"]}" \
+                --data-urlencode "parameterModels[3].exposed=on" \
+                --data-urlencode "parameterModels[3].key=text" \
                 --data-urlencode "enabled=on" \
                 --data-urlencode "name=Slack" \
                 --data-urlencode "chatType=SLACK""
