@@ -38,11 +38,11 @@ docker run \
 
 Watch for **ATSD start completed** message at the end of the `start.log` file.
 
-```
+```sh
 docker logs -f atsd
 ```
 
-```
+```txt
 [ATSD] Starting ATSD ...
 ...
 [ATSD] Waiting for ATSD to start. Checking ATSD user interface port 8088 ...
