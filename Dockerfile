@@ -1,6 +1,7 @@
 FROM ubuntu:16.04
 MAINTAINER ATSD Developers <dev-atsd@axibase.com>
 ENV version latest
+ENV DEPLOYMENT_TYPE api-test
 #metadata
 LABEL com.axibase.vendor="Axibase Corporation" \
   com.axibase.product="Axibase Time Series Database: API Test Non-distributed" \
