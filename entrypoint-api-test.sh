@@ -50,6 +50,12 @@ rm /opt/atsd/atsd/logs/atsd.log
 rm /opt/atsd/atsd/logs/command*.log
 rm /opt/atsd/atsd/logs/err.log
 
+curl https://raw.githubusercontent.com/axibase/atsd/master/rule-engine/resources/calendars/usa.json > /opt/atsd/atsd/conf/
+calendars/usa.json
+curl https://raw.githubusercontent.com/axibase/atsd/master/rule-engine/resources/calendars/rus.json > /opt/atsd/atsd/conf/
+calendars/rus.json
+logger "USA and RUS workday calendars updated"
+
 /opt/atsd/bin/atsd-tsd.sh start
 
 curl -i --data "userBean.username=$axiname&userBean.password=$axipass&repeatPassword=$axipass" http://127.0.0.1:8088/login
