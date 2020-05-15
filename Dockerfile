@@ -31,7 +31,7 @@ ADD entrypoint-api-test.sh /
 RUN chown -R axibase:axibase /opt/atsd /entrypoint*
 
 USER axibase
-#jmx, atsd(tcp), atsd(udp), pickle, http, https
-EXPOSE 1099 8081 8082/udp 8084 8088 8443
+#jmx, atsd(tcp), atsd(udp), pickle, http, https trades-csv(tcp)
+EXPOSE 1099 8081 8082/udp 8084 8088 8443 8085
 VOLUME ["/opt/atsd"]
 ENTRYPOINT ["/bin/bash","/entrypoint-api-test.sh"]
