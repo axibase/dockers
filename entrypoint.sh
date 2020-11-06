@@ -60,6 +60,10 @@ if [ -n "$ADMIN_USER_NAME" ] && [ -n "$ADMIN_USER_PASSWORD" ]; then
     fi
 fi
 
+sleep 5;
+
+tail -f "$(ls -1a -t /opt/atsd/logs/atsd*.log | head -n1)"
+
 while [ "$executing" = "true" ]; do
     sleep 1
     trap 'echo "kill signal handled, stopping processes ..."; executing="false"' SIGINT SIGTERM
