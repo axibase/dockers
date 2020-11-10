@@ -15,7 +15,6 @@ function wait_for_start() {
 
 function create_hbase_tables() {
   echo "Creating Hbase tables"
-
   ${DISTR_HOME}/bin/start-atsd.sh
   wait_for_start
   ${DISTR_HOME}/bin/stop-atsd.sh -f

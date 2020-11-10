@@ -1,14 +1,9 @@
 #!/bin/bash
 trap 'echo "kill signal handled, stopping processes ..."; executing="false"' SIGINT SIGTERM
 DISTR_HOME="/opt/atsd"
-installUser="${DISTR_HOME}/install_user.sh"
-ATSD_ALL="${DISTR_HOME}/bin/atsd-all.sh"
-HBASE="`readlink -f ${DISTR_HOME}/hbase/bin/hbase`"
-HBASE_DAEMON="`readlink -f ${DISTR_HOME}/hbase/bin/hbase-daemon.sh`"
-DFS_STOP="`readlink -f ${DISTR_HOME}/hadoop/sbin/stop-dfs.sh`"
 LOGFILESTART="`readlink -f ${DISTR_HOME}/atsd/logs/start.log`"
 LOGFILESTOP="`readlink -f ${DISTR_HOME}/atsd/logs/stop.log`"
-ZOOKEEPER_DATA_DIR="${DISTR_HOME}/hbase/zookeeper"
+MAIN_CLASS="ATSD"
 
 collectorUser="${COLLECTOR_USER_NAME}"
 collectorPassword="${COLLECTOR_USER_PASSWORD}"
@@ -73,9 +68,9 @@ echo "[ATSD] SIGTERM received ( docker stop ). Stopping services ..."
 
 jps_output=$(jps)
 
-if echo "${jps_output}" | grep -q "ATSD"; then
+if echo "${jps_output}" | grep -q "${MAIN_CLASS}"; then
     echo "[ATSD] Stopping ATSD server ..." | tee -a $LOGFILESTOP
-    kill -SIGKILL $(echo "${jps_output}" | grep 'ATSD' | awk '{print $1}') 2>/dev/null
+    kill -SIGKILL $(echo "${jps_output}" | grep '${MAIN_CLASS}' | awk '{print $1}') 2>/dev/null
 fi
 
 

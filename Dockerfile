@@ -14,10 +14,11 @@ COPY entry*.sh /
 
 # install and configure pseudo-cluster
 RUN apt-get update \
-  && apt install -y curl \
-  && curl -o atsd.standalone.tar.gz https://axibase.com/public/atsd.standalone.tar.gz \
+  && apt install -y curl;
+  
+RUN curl -o atsd.standalone.tar.gz https://axibase.com/public/atsd.standalone.tar.gz \
   && tar -xzvf atsd.standalone.tar.gz -C /opt/ \
-  && rm -rf atsd.standalone.tar.gz;
+  && rm -rf atsd.standalone.tar.gz;  
   
 RUN adduser --disabled-password --quiet --gecos "" axibase;   
   
