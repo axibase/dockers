@@ -4,6 +4,12 @@ DISTR_HOME="/opt/atsd"
 HOST="127.0.0.1"
 HTTP_PORT=8088
 
+function cleanup_apt_files() {
+  echo "Cleanup installed apt packages"
+  apt remove -y curl
+  rm -rf /var/lib/apt/lists/*
+}
+
 function wait_for_start() {
   echo -n "waiting for ATSD server start"
   while [[ $(curl --write-out %{http_code} --silent --output /dev/null http://${HOST}:${HTTP_PORT}/) != 302 ]]; do
@@ -30,3 +36,4 @@ cd "${DISTR_HOME}" || return
 chown -R axibase:axibase ${DISTR_HOME}
 
 create_hbase_tables
+cleanup_apt_files
