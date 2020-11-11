@@ -1,12 +1,14 @@
 FROM openjdk:8-jdk-slim
 ENV version=12345 LANG=en_US.UTF-8
 
+ARG version=12345
+
 # metadata
 LABEL com.axibase.maintainer="ATSD Developers" \
   com.axibase.vendor="Axibase Corporation" \
   com.axibase.product="Axibase Time Series Database" \
   com.axibase.code="ATSD" \
-  com.axibase.revision="${version}"
+  com.axibase.revision="$version"
 
 # add entrypoint and image cleanup script
 COPY entry*.sh /
@@ -16,7 +18,7 @@ COPY entry*.sh /
 RUN apt-get update \
   && apt install -y curl;
   
-RUN curl -o atsd.standalone.tar.gz https://axibase.com/public/atsd.standalone.tar.gz \
+RUN curl -o atsd.standalone.tar.gz https://axibase.com/public/atsd.standalone.$version.tar.gz \
   && tar -xzvf atsd.standalone.tar.gz -C /opt/ \
   && rm -rf atsd.standalone.tar.gz;  
   
