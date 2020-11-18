@@ -57,7 +57,7 @@ fi
 
 sleep 5;
 
-tail -f /opt/atsd/logs/atsd.log
+tail -f /opt/atsd/logs/start.log
 
 while [ "$executing" = "true" ]; do
     sleep 1
