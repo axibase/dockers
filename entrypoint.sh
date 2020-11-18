@@ -31,7 +31,7 @@ fi
 
 executing="true"
 
-bash /opt/atsd/bin/start-atsd.sh
+bash /opt/atsd/bin/atsd-tsd.sh start
 
 if [ $? -eq 1 ]; then
     echo "[ATSD] Failed to start ATSD. Check $LOGFILESTART file." | tee -a $LOGFILESTART
@@ -57,7 +57,7 @@ fi
 
 sleep 5;
 
-tail -f "$(ls -1a -t /opt/atsd/logs/atsd*.log | head -n1)"
+tail -f /opt/atsd/logs/atsd.log
 
 while [ "$executing" = "true" ]; do
     sleep 1
