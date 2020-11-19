@@ -13,14 +13,22 @@ LABEL com.axibase.maintainer="ATSD Developers" \
 # add entrypoint and image cleanup script
 COPY entry*.sh /
 
+COPY atsd.standalone.tar.gz /
 
 # install and configure pseudo-cluster
 RUN apt-get update \
-  && apt install -y curl;
+  && apt install -y curl procps iproute2;
   
-RUN curl -o atsd.standalone.tar.gz https://axibase.com/public/atsd.standalone.$version.tar.gz \
-  && tar -xzvf atsd.standalone.tar.gz -C /opt/ \
+#RUN curl -o atsd.standalone.tar.gz https://axibase.com/public/atsd.standalone.$version.tar.gz \
+#  && tar -xzvf atsd.standalone.tar.gz -C /opt/ \
+#  && rm -rf atsd.standalone.tar.gz; 
+
+RUN which ss
+   
+RUN tar -xzvf atsd.standalone.tar.gz -C /opt/ \
   && rm -rf atsd.standalone.tar.gz;  
+
+
   
 RUN adduser --disabled-password --quiet --gecos "" axibase;   
   

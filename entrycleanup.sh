@@ -21,9 +21,8 @@ function wait_for_start() {
 
 function create_hbase_tables() {
   echo "Creating Hbase tables"
-  ${DISTR_HOME}/bin/atsd-tsd.sh start
-  wait_for_start
-  ${DISTR_HOME}/bin/atsd-tsd.sh stop
+  /bin/bash ${DISTR_HOME}/bin/atsd-tsd.sh start
+  /bin/bash ${DISTR_HOME}/bin/stop-atsd.sh -f
   #Cleanup logs
   rm -rf ${DISTR_HOME}/logs/*
   touch ${DISTR_HOME}/logs/err.log
