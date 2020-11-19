@@ -22,8 +22,8 @@ RUN curl -o atsd.standalone.tar.gz https://axibase.com/public/atsd.standalone.$v
   && rm -rf atsd.standalone.tar.gz; 
 
    
-RUN tar -xzvf atsd.standalone.tar.gz -C /opt/ \
-  && rm -rf atsd.standalone.tar.gz;  
+#RUN tar -xzvf atsd.standalone.tar.gz -C /opt/ \
+#  && rm -rf atsd.standalone.tar.gz;  
 
 
   
