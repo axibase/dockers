@@ -6,7 +6,6 @@ HTTP_PORT=8088
 
 function cleanup_apt_files() {
   echo "Cleanup installed apt packages"
-  apt remove -y curl
   rm -rf /var/lib/apt/lists/*
 }
 
