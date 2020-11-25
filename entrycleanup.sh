@@ -9,15 +9,6 @@ function cleanup_apt_files() {
   rm -rf /var/lib/apt/lists/*
 }
 
-function wait_for_start() {
-  echo -n "waiting for ATSD server start"
-  while [[ $(curl --write-out %{http_code} --silent --output /dev/null http://${HOST}:${HTTP_PORT}/) != 302 ]]; do
-    echo -n "."
-    sleep 3
-  done
-  echo ""
-}
-
 function create_hbase_tables() {
   echo "Creating Hbase tables"
   /bin/bash ${DISTR_HOME}/bin/atsd-tsd.sh start
