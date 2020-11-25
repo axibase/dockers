@@ -26,8 +26,8 @@ RUN apt-key adv --keyserver hkp://keyserver.ubuntu.com --recv-keys 26AEE425A5796
 
 USER axibase
 
-# jmx, network commands(tcp), network commands(udp), graphite, http, https
-EXPOSE 1099 8081 8082/udp 8084 8088 8443
+# jmx, network commands(tcp), network commands(udp), trades, statistics, graphite, http, https
+EXPOSE 1099 8081 8082/udp 8084 8085 8086/udp 8091 8092/udp 8088 8443
 
 VOLUME ["/opt/atsd"]
 
