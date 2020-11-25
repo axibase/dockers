@@ -15,11 +15,12 @@ COPY entry*.sh /
 
 # install and configure pseudo-cluster
 RUN apt-get update \
-  && apt install -y curl procps iproute2;
+  && apt install -y locales curl procps iproute2 \
+  && locale-gen en_US.UTF-8;
   
   
 #  
-RUN curl -s atsd.standalone.tar.gz https://axibase.com/public/atsd.standalone.$version.tar.gz | tar -xzv-C /opt/
+RUN curl -s atsd.standalone.tar.gz https://axibase.com/public/atsd.standalone.$version.tar.gz | tar -xzv -C /opt/
 
    
 #RUN tar -xzvf atsd.standalone.tar.gz -C /opt/ \
