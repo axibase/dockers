@@ -17,15 +17,13 @@ COPY entry*.sh /
 RUN apt-get update \
   && apt install -y curl procps iproute2;
   
-RUN curl -o atsd.standalone.tar.gz https://axibase.com/public/atsd.standalone.$version.tar.gz \
-  && tar -xzvf atsd.standalone.tar.gz -C /opt/ \
-  && rm -rf atsd.standalone.tar.gz; 
+  
+#  
+RUN curl -s atsd.standalone.tar.gz https://axibase.com/public/atsd.standalone.$version.tar.gz | tar -xzv-C /opt/
 
    
 #RUN tar -xzvf atsd.standalone.tar.gz -C /opt/ \
 #  && rm -rf atsd.standalone.tar.gz;  
-
-
   
 RUN adduser --disabled-password --quiet --gecos "" axibase;   
   
