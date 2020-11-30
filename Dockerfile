@@ -27,7 +27,12 @@ RUN curl -s atsd.standalone.tar.gz https://axibase.com/public/atsd.standalone.$v
 #  && rm -rf atsd.standalone.tar.gz;  
   
 RUN adduser --disabled-password --quiet --gecos "" axibase;   
-  
+
+COPY hbase-shell/bin /opt/atsd/bin
+COPY hbase-shell/lib /opt/atsd/lib
+
+ADD https://repo1.maven.org/maven2/org/jruby/jruby-complete/1.6.8/jruby-complete-1.6.8.jar /opt/atsd/lib
+
 RUN /entrycleanup.sh;
 
 USER axibase
