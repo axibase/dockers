@@ -1,8 +1,8 @@
 #!/bin/bash
 trap 'echo "kill signal handled, stopping processes ..."; executing="false"' SIGINT SIGTERM
 DISTR_HOME="/opt/atsd"
-LOGFILESTART="{DISTR_HOME}/atsd/logs/start.log"
-LOGFILESTOP="{DISTR_HOME}/atsd/logs/stop.log"
+LOGFILESTART="${DISTR_HOME}/atsd/logs/start.log"
+LOGFILESTOP="${DISTR_HOME}/atsd/logs/stop.log"
 MAIN_CLASS="ATSD"
 
 collectorUser="${COLLECTOR_USER_NAME}"
