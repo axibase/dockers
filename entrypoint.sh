@@ -31,6 +31,11 @@ fi
 
 executing="true"
 
+if [ -n "$profile" ]; then
+  echo "[ATSD] Database profile set to $profile" | tee -a $LOGFILESTART
+  echo "export JAVA_PROPERTIES=\"-Dprofile=$profile \$JAVA_PROPERTIES\"" >> /opt/atsd/conf/atsd-env.sh
+fi;
+
 bash /opt/atsd/bin/atsd-tsd.sh start
 
 if [ $? -eq 1 ]; then
@@ -64,7 +69,7 @@ while [ "$executing" = "true" ]; do
     trap 'echo "kill signal handled, stopping processes ..."; executing="false"' SIGINT SIGTERM
 done
 
-echo "[ATSD] SIGTERM received ( docker stop ). Stopping services ..." 
+echo "[ATSD] SIGTERM received ( docker stop ). Stopping services ..."
 
 jps_output=$(jps)
 
