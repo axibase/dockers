@@ -50,6 +50,11 @@ function cleanup_hbase_tables() {
 }
 
 function cleanup_log_files() {
+  echo "Remove log files and temporary directories."
+  rm -rf ${DISTR_HOME}/conf/license/*
+  rm -rf ${DISTR_HOME}/hbase/logs/*
+  rm -rf ${DISTR_HOME}/hbase/zookeeper
+  rm -rf /tmp/atsd
   rm -rf ${DISTR_HOME}/logs/*
   touch ${DISTR_HOME}/logs/err.log
   chown -R axibase:axibase ${DISTR_HOME}/logs
