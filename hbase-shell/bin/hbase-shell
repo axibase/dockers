@@ -156,7 +156,7 @@ for f in $HBASE_HOME/lib/*.jar; do
   CLASSPATH=${CLASSPATH}:$f
 done
 
-CLASSPATH=${CLASSPATH}:${HBASE_HOME}/bin/atsd-executable.jar
+CLASSPATH=${CLASSPATH}:${HBASE_HOME}/../bin/atsd-executable.jar
 
 # default log directory & file
 if [ "$HBASE_LOG_DIR" = "" ]; then
@@ -288,7 +288,7 @@ fi
 if [ "$COMMAND" = "master" ] || [ "$COMMAND" = "regionserver" ]; then
   HBASE_OPTS="$HBASE_OPTS -Dhbase.security.logger=${HBASE_SECURITY_LOGGER:-INFO,RFAS}"
 else
-  HBASE_OPTS="$HBASE_OPTS -Dhbase.security.logger=${HBASE_SECURITY_LOGGER:-INFO,NullAppender}"
+  HBASE_OPTS="$HBASE_OPTS -Dlsecurity.logger=${HBASE_SECURITY_LOGGER:-INFO,NullAppender}"
 fi
 
 HEAP_SETTINGS="$JAVA_HEAP_MAX $JAVA_OFFHEAP_MAX"
