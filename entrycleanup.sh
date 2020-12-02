@@ -13,33 +13,46 @@ function create_hbase_tables() {
   echo "Creating Hbase tables"
   /bin/bash ${DISTR_HOME}/bin/atsd-tsd.sh start
   /bin/bash ${DISTR_HOME}/bin/stop-atsd.sh -f
-  #Cleanup logs
-  rm -rf ${DISTR_HOME}/logs/*
-  touch ${DISTR_HOME}/logs/err.log
-  chown -R axibase:axibase ${DISTR_HOME}/logs
+}
+
+function hbase_shell() {
+  echo -e "$1" | ./hbase/bin/hbase-shell
+}
+
+function wait_hbase_start() {
+  while hbase_shell "status" | grep -q "ERROR:"; do
+    sleep 5
+  done
 }
 
 function cleanup_hbase_tables() {
   #Start ATSD in hbase mode
-  ./bin/start-atsd.sh -h
-  echo "status" | ./bin/hbase-shell
+  /bin/bash ${DISTR_HOME}/bin/start-atsd.sh -h
+  wait_hbase_start
 
   echo "Truncate tables"
 
   for table in d entity li metric properties tag message message_source message_type; do
-    echo "truncate 'atsd_${table}'" | ./bin/hbase-shell
+    hbase_shell "truncate 'atsd_${table}'"
   done
 
-  #echo "scan 'atsd_config'" | ./bin/hbase-shell
+  #hbase-shell "scan 'atsd_config'"
 
-  echo "delete 'atsd_config','options','mc:hostname'" | ./bin/hbase-shell
-  echo "delete 'atsd_config','options','mc:server.url'" | ./bin/hbase-shell
-  echo "deleteall 'atsd_config','activeFamily'" | ./bin/hbase-shell
-  echo "deleteall 'atsd_config','inactiveFamily'" | ./bin/hbase-shell
-  echo "deleteall 'atsd_counter', '__inst'" | ./bin/hbase-shell
+  hbase_shell "delete 'atsd_config','options','mc:hostname'"
+  hbase_shell "delete 'atsd_config','options','mc:server.url'"
+  hbase_shell "deleteall 'atsd_config','activeFamily'"
+  hbase_shell "deleteall 'atsd_config','inactiveFamily'"
+  hbase_shell "get 'atsd_counter', '__inst'"
+  hbase_shell "deleteall 'atsd_counter', '__inst'"
 
   echo "Stop all services"
   ./bin/stop-atsd.sh -f
+}
+
+function cleanup_log_files() {
+  rm -rf ${DISTR_HOME}/logs/*
+  touch ${DISTR_HOME}/logs/err.log
+  chown -R axibase:axibase ${DISTR_HOME}/logs
 }
 
 echo "Initiate build cleanup in ${DISTR_HOME}. Current user: $(whoami)"
@@ -50,3 +63,4 @@ chown -R axibase:axibase ${DISTR_HOME}
 create_hbase_tables
 cleanup_apt_files
 cleanup_hbase_tables
+cleanup_log_files
