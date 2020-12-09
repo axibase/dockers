@@ -1,14 +1,9 @@
 #!/bin/bash
 trap 'echo "kill signal handled, stopping processes ..."; executing="false"' SIGINT SIGTERM
 DISTR_HOME="/opt/atsd"
-installUser="${DISTR_HOME}/install_user.sh"
-ATSD_ALL="${DISTR_HOME}/bin/atsd-all.sh"
-HBASE="`readlink -f ${DISTR_HOME}/hbase/bin/hbase`"
-HBASE_DAEMON="`readlink -f ${DISTR_HOME}/hbase/bin/hbase-daemon.sh`"
-DFS_STOP="`readlink -f ${DISTR_HOME}/hadoop/sbin/stop-dfs.sh`"
-LOGFILESTART="`readlink -f ${DISTR_HOME}/atsd/logs/start.log`"
-LOGFILESTOP="`readlink -f ${DISTR_HOME}/atsd/logs/stop.log`"
-ZOOKEEPER_DATA_DIR="${DISTR_HOME}/hbase/zookeeper"
+LOGFILESTART="${DISTR_HOME}/atsd/logs/start.log"
+LOGFILESTOP="${DISTR_HOME}/atsd/logs/stop.log"
+MAIN_CLASS="ATSD"
 
 collectorUser="${COLLECTOR_USER_NAME}"
 collectorPassword="${COLLECTOR_USER_PASSWORD}"
@@ -31,22 +26,17 @@ fi
 # set custom timezone
 if [ -n "$DB_TIMEZONE" ]; then
     echo "[ATSD] Database timezone set to '$DB_TIMEZONE'." | tee -a  $LOGFILESTART
-    echo "export JAVA_PROPERTIES=\"-Duser.timezone=$DB_TIMEZONE \$JAVA_PROPERTIES\"" >> /opt/atsd/atsd/conf/atsd-env.sh
+    echo "export JAVA_PROPERTIES=\"-Duser.timezone=$DB_TIMEZONE \$JAVA_PROPERTIES\"" >> /opt/atsd/conf/atsd-env.sh
 fi
 
-test_directory="${DISTR_HOME}/hdfs-data"
-firstStart="true"
 executing="true"
 
-if [ -d "$test_directory" ] && [ -n "$(ls -A ${test_directory})" ]; then
-    firstStart="false"
-fi
+if [ -n "$profile" ]; then
+  echo "[ATSD] Database profile set to $profile" | tee -a $LOGFILESTART
+  echo "export JAVA_PROPERTIES=\"-Dprofile=$profile \$JAVA_PROPERTIES\"" >> /opt/atsd/conf/atsd-env.sh
+fi;
 
-if [ "$firstStart" = "true" ]; then
-    ${ATSD_ALL} start skipTest
-else
-    ${ATSD_ALL} start
-fi
+bash /opt/atsd/bin/atsd-tsd.sh start
 
 if [ $? -eq 1 ]; then
     echo "[ATSD] Failed to start ATSD. Check $LOGFILESTART file." | tee -a $LOGFILESTART
@@ -66,36 +56,27 @@ if [ -n "$ADMIN_USER_NAME" ] && [ -n "$ADMIN_USER_PASSWORD" ]; then
     if curl -s -i --data "userBean.username=$ADMIN_USER_NAME&userBean.password=$ADMIN_USER_PASSWORD&repeatPassword=$ADMIN_USER_PASSWORD" http://127.0.0.1:8088/login | grep -q "302"; then
         echo "[ATSD] Administrator account '$ADMIN_USER_NAME' created." | tee -a  $LOGFILESTART
     else
-        echo "[ATSD] Failed to create administrator account '$ADMIN_USER_NAME'." | tee -a  $LOGFILESTART
+        echo "[ATSD] Failed to create administrator account '$ADMIN_USER_NAME'."
     fi
 fi
+
+sleep 5;
+
+tail -f /opt/atsd/logs/start.log
 
 while [ "$executing" = "true" ]; do
     sleep 1
     trap 'echo "kill signal handled, stopping processes ..."; executing="false"' SIGINT SIGTERM
 done
 
-echo "[ATSD] SIGTERM received ( docker stop ). Stopping services ..." | tee -a $LOGFILESTOP
+echo "[ATSD] SIGTERM received ( docker stop ). Stopping services ..."
 
 jps_output=$(jps)
 
-if echo "${jps_output}" | grep -q "Server"; then
+if echo "${jps_output}" | grep -q "${MAIN_CLASS}"; then
     echo "[ATSD] Stopping ATSD server ..." | tee -a $LOGFILESTOP
-    kill -SIGKILL $(echo "${jps_output}" | grep 'Server' | awk '{print $1}') 2>/dev/null
+    kill -SIGKILL $(echo "${jps_output}" | grep '${MAIN_CLASS}' | awk '{print $1}') 2>/dev/null
 fi
-echo "[ATSD] Stopping HBase processes ..." | tee -a $LOGFILESTOP
-if echo "${jps_output}" | grep -q "HRegionServer"; then
-    ${HBASE_DAEMON} stop regionserver
-fi
-if echo "${jps_output}" | grep -q "HMaster"; then
-    ${HBASE_DAEMON} stop master
-fi
-if echo "${jps_output}" | grep -q "HQuorumPeer"; then
-    ${HBASE_DAEMON} stop zookeeper
-fi
-echo "[ATSD] ZooKeeper data cleanup ..." | tee -a $LOGFILESTOP
-rm -rf "${ZOOKEEPER_DATA_DIR}" 2>/dev/null
-echo "[ATSD] Stopping HDFS processes ..." | tee -a $LOGFILESTOP
-${DFS_STOP}
+
 
 exit 0

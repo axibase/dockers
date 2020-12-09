@@ -16,7 +16,7 @@ Refer to [ATSD Documentation](https://axibase.com/docs/atsd/) for additional det
 
 ## Image Summary
 
-* Image name: `axibase/atsd:latest`
+* Image name: `axibase/atsd:standalone`
 * Base Image: Ubuntu 16.04
 * [Dockerfile](https://github.com/axibase/dockers/blob/master/Dockerfile)
 
@@ -31,7 +31,7 @@ docker run \
   --publish 8443:8443 \
   --publish 8081:8081 \
   --publish 8082:8082/udp \
-  axibase/atsd:latest
+  axibase/atsd:standalone
 ```
 
 ## Check Installation
@@ -78,8 +78,6 @@ The user interface is accessible on port `8443`/https.
 |`COLLECTOR_USER_TYPE` | No | User group for a data collector account, default value is `writer`.|
 |`DB_TIMEZONE` | No | Database [timezone identifier](https://axibase.com/docs/atsd/administration/timezone.html).|
 |`JAVA_OPTS` | No | Additional arguments to be passed to ATSD JVM process. |
-|`HADOOP_OPTS` | No | Additional arguments to be passed to Hadoop/HDFS JVM processes. |
-|`HBASE_OPTS` | No | Additional arguments to be passed to HBase JVM processes. |
 
 View additional launch examples [here](https://axibase.com/docs/atsd/installation/docker.html).
 

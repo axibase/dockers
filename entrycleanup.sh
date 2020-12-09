@@ -1,62 +1,71 @@
 #!/bin/bash
+
 DISTR_HOME="/opt/atsd"
+HOST="127.0.0.1"
+HTTP_PORT=8088
 
-echo "Initiate build cleanup in ${DISTR_HOME}. Current user: `whoami`"
+function cleanup_apt_files() {
+  echo "Cleanup installed apt packages"
+  rm -rf /var/lib/apt/lists/*
+}
 
-cd ${DISTR_HOME}
+function create_hbase_tables() {
+  echo "Creating Hbase tables"
+  /bin/bash ${DISTR_HOME}/bin/atsd-tsd.sh start
+  /bin/bash ${DISTR_HOME}/bin/stop-atsd.sh -f
+}
+
+function hbase_shell() {
+  echo -e "$1" | ./hbase/bin/hbase-shell
+}
+
+function wait_hbase_start() {
+  while hbase_shell "status" | grep -q "ERROR:"; do
+    sleep 5
+  done
+}
+
+function cleanup_hbase_tables() {
+  #Start ATSD in hbase mode
+  /bin/bash ${DISTR_HOME}/bin/start-atsd.sh -h
+  wait_hbase_start
+
+  echo "Truncate tables"
+
+  for table in d entity li metric properties tag message message_source message_type; do
+    hbase_shell "truncate 'atsd_${table}'"
+  done
+
+  #hbase-shell "scan 'atsd_config'"
+
+  hbase_shell "delete 'atsd_config','options','mc:hostname'"
+  hbase_shell "delete 'atsd_config','options','mc:server.url'"
+  hbase_shell "deleteall 'atsd_config','activeFamily'"
+  hbase_shell "deleteall 'atsd_config','inactiveFamily'"
+  hbase_shell "get 'atsd_counter', '__inst'"
+  hbase_shell "deleteall 'atsd_counter', '__inst'"
+
+  echo "Stop all services"
+  ./bin/stop-atsd.sh -f
+}
+
+function cleanup_log_files() {
+  echo "Remove log files and temporary directories."
+  rm -rf ${DISTR_HOME}/conf/license/*
+  rm -rf ${DISTR_HOME}/hbase/logs/*
+  rm -rf ${DISTR_HOME}/hbase/zookeeper
+  rm -rf /tmp/atsd
+  rm -rf ${DISTR_HOME}/logs/*
+  touch ${DISTR_HOME}/logs/err.log
+  chown -R axibase:axibase ${DISTR_HOME}/logs
+}
+
+echo "Initiate build cleanup in ${DISTR_HOME}. Current user: $(whoami)"
+
+cd "${DISTR_HOME}" || return
 chown -R axibase:axibase ${DISTR_HOME}
 
-echo "Start all services to ensure that schema is initialized. Skip tests."
-./bin/atsd-all.sh start skipTest
-
-echo "=== ATSD log ==="
-tail -n 50 ./atsd/logs/atsd.log
-echo "================"
-
-echo "Stop ATSD"
-./bin/atsd-tsd.sh stop  
-
-# only HDFS and HBase must be running at this time
-./bin/atsd-all.sh status
-
-echo "status" | ./hbase/bin/hbase shell
-
-echo "Truncate tables"
-
-for table in d entity li metric properties tag message message_source message_type; do
-  echo "truncate 'atsd_${table}'" | ./hbase/bin/hbase shell
-done
-
-#echo "scan 'atsd_config'" | ./hbase/bin/hbase shell
-
-echo "delete 'atsd_config','options','mc:hostname'" | ./hbase/bin/hbase shell
-echo "delete 'atsd_config','options','mc:server.url'" | ./hbase/bin/hbase shell
-echo "deleteall 'atsd_config','activeFamily'" | ./hbase/bin/hbase shell
-echo "deleteall 'atsd_config','inactiveFamily'" | ./hbase/bin/hbase shell
-
-echo "Stop all services"
-
-./bin/atsd-hbase.sh stop
-./bin/atsd-dfs.sh stop
-
-echo "Remove log files and temporary directories."
-
-rm -rf ./atsd/conf/license/*
-rm -rf ./atsd/logs/*
-rm -rf ./hbase/logs/*
-rm -rf ./hadoop/logs/*
-rm -rf ./hbase/zookeeper
-rm -rf ./hdfs-cache
-rm -rf /tmp/atsd
-
-echo "Move install files to ./install directory"
-
-mkdir -p ./install
-mv ./install*.log ./install
-mv ./install*.sh ./install
-mv ./java_find.sh ./install
-mv ./atsd*ervice ./install
-
-echo "Set file ownership to 'axibase' user"
-
-chown -R axibase:axibase ${DISTR_HOME}
+create_hbase_tables
+cleanup_apt_files
+cleanup_hbase_tables
+cleanup_log_files
