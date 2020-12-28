@@ -31,7 +31,7 @@ docker run \
   --publish 8443:8443 \
   --publish 8081:8081 \
   --publish 8082:8082/udp \
-  axibase/atsd:standalone
+  axibase/atsd:latest
 ```
 
 ## Check Installation
