@@ -16,16 +16,16 @@ function logger() {
   echo "$1" | tee -a $UPDATELOG
 }
 
+curl https://raw.githubusercontent.com/axibase/atsd/master/rule-engine/resources/calendars/usa.json >/opt/atsd/conf/calendars/usa.json
+curl https://raw.githubusercontent.com/axibase/atsd/master/rule-engine/resources/calendars/rus.json >/opt/atsd/conf/calendars/rus.json
+logger "USA and RUS workday calendars updated"
+
 yes | bash ${DISTR_HOME}/bin/update.sh
 
 #check timezone
 if [ -n "${timezone}" ]; then
   echo "export JAVA_PROPERTIES=\"-Duser.timezone=$timezone \$JAVA_PROPERTIES\"" >>/opt/atsd/conf/atsd-env.sh
 fi
-
-curl https://raw.githubusercontent.com/axibase/atsd/master/rule-engine/resources/calendars/usa.json >/opt/atsd/conf/calendars/usa.json
-curl https://raw.githubusercontent.com/axibase/atsd/master/rule-engine/resources/calendars/rus.json >/opt/atsd/conf/calendars/rus.json
-logger "USA and RUS workday calendars updated"
 
 ${DISTR_HOME}/bin/atsd-tsd.sh start
 
