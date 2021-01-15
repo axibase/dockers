@@ -1,7 +1,7 @@
 FROM openjdk:8-jdk-slim
-ENV version=26235 LANG=en_US.UTF-8
+ENV version=26245 LANG=en_US.UTF-8
 
-ARG version=26235
+ARG version=26245
 
 # metadata
 LABEL com.axibase.maintainer="ATSD Developers" \
