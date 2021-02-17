@@ -1,5 +1,5 @@
 FROM openjdk:8-jdk-slim
-ENV version=26426 LANG=en_US.UTF-8
+ENV version=26427 LANG=en_US.UTF-8
 
 ARG version=26044
 
