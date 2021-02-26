@@ -35,6 +35,11 @@ if [ -n "$profile" ]; then
   echo "[ATSD] Database profile set to $profile" | tee -a $LOGFILESTART
   echo "export JAVA_PROPERTIES=\"-Dprofile=$profile \$JAVA_PROPERTIES\"" >> /opt/atsd/conf/atsd-env.sh
 fi;
+# use -v check for empty settings case
+if [[ -v settings ]]; then
+  echo "[ATSD] Database is used following settings: $settings" | tee -a $LOGFILESTART
+  echo "export JAVA_PROPERTIES=\"-Dsettings=$settings \$JAVA_PROPERTIES\"" >> /opt/atsd/conf/atsd-env.sh
+fi;
 
 bash /opt/atsd/bin/atsd-tsd.sh start
 
