@@ -12,7 +12,7 @@ function cleanup_apt_files() {
 function create_hbase_tables() {
   echo "Creating Hbase tables"
   #Do not import any artifacts on this step, as settings and profile defined only in entrypoint stage
-  JAVA_PROPERTIES="-Dsettings= $JAVA_PROPERTIES"
+  export JAVA_PROPERTIES="-Dsettings= $JAVA_PROPERTIES"
   /bin/bash ${DISTR_HOME}/bin/atsd-tsd.sh start
   /bin/bash ${DISTR_HOME}/bin/stop-atsd.sh -f
 }
