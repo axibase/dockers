@@ -5,6 +5,27 @@ LOGFILESTART="${DISTR_HOME}/atsd/logs/start.log"
 LOGFILESTOP="${DISTR_HOME}/atsd/logs/stop.log"
 MAIN_CLASS="ATSD"
 
+function log_file() {
+  local name=$1
+  local logs_dir="$DISTR_HOME/logs/"
+  local logfile="$logs_dir/$name"
+  local link
+  link="$(readlink -f "$logfile")"
+  if [ -z "$link" ]; then
+    if [ ! -d "$logs_dir" ]; then
+      mkdir "$logs_dir"
+    fi
+    touch "$logfile"
+    readlink -f "$logfile"
+  else
+    echo "$link"
+  fi
+}
+
+LOGFILESTART=$(log_file start.log)
+LOGFILESTOP=$(log_file stop.log)
+
+
 collectorUser="${COLLECTOR_USER_NAME}"
 collectorPassword="${COLLECTOR_USER_PASSWORD}"
 if [ -n "$COLLECTOR_USER_TYPE" ]; then
