@@ -58,6 +58,7 @@ function cleanup_log_files() {
   rm -rf ${DISTR_HOME}/hbase/zookeeper
   rm -rf /tmp/atsd
   rm -rf ${DISTR_HOME}/logs/*
+  mkdir  ${DISTR_HOME}/logs
   touch ${DISTR_HOME}/logs/err.log
   chown -R axibase:axibase ${DISTR_HOME}/logs
 }
@@ -66,7 +67,7 @@ echo "Initiate build cleanup in ${DISTR_HOME}. Current user: $(whoami)"
 
 cd "${DISTR_HOME}" || return
 chown -R axibase:axibase ${DISTR_HOME}
-
+cleanup_log_files
 create_hbase_tables
 cleanup_apt_files
 cleanup_hbase_tables
