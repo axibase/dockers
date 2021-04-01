@@ -79,7 +79,7 @@ elif [ -n "$collectorPassword" ] && [ -n "$collectorUser" ]; then
 fi
 
 if [ -n "$ADMIN_USER_NAME" ] && [ -n "$ADMIN_USER_PASSWORD" ]; then
-    if curl -s -i --data "userBean.username=$ADMIN_USER_NAME&userBean.password=$ADMIN_USER_PASSWORD&repeatPassword=$ADMIN_USER_PASSWORD" http://127.0.0.1:8088/login | grep -q "302"; then
+    if curl -s -i -F "user=$ADMIN_USER_NAME" -F "password=$ADMIN_USER_PASSWORD" http://127.0.0.1:8088/setup-user | grep -q "204"; then
         echo "[ATSD] Administrator account '$ADMIN_USER_NAME' created." | tee -a  $LOGFILESTART
     else
         echo "[ATSD] Failed to create administrator account '$ADMIN_USER_NAME'."
