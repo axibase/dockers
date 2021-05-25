@@ -20,14 +20,14 @@ curl https://raw.githubusercontent.com/axibase/atsd/master/rule-engine/resources
 curl https://raw.githubusercontent.com/axibase/atsd/master/rule-engine/resources/calendars/rus.json >/opt/atsd/conf/calendars/rus.json
 logger "USA and RUS workday calendars updated"
 
+echo "export JAVA_PROPERTIES=\"-Dprofile=FINANCE -Dsettings=fin.ru \$JAVA_PROPERTIES\"" >> /opt/atsd/conf/atsd-env.sh
+
 yes | bash ${DISTR_HOME}/bin/update.sh
 
 #check timezone
 if [ -n "${timezone}" ]; then
   echo "export JAVA_PROPERTIES=\"-Duser.timezone=$timezone \$JAVA_PROPERTIES\"" >>/opt/atsd/conf/atsd-env.sh
 fi
-# Set DB profile to FINANCE
-echo "export JAVA_PROPERTIES=\"-Dprofile=FINANCE \$JAVA_PROPERTIES\"" >>/opt/atsd/conf/atsd-env.sh
 
 ${DISTR_HOME}/bin/atsd-tsd.sh start
 
