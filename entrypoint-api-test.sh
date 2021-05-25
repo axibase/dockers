@@ -26,6 +26,8 @@ yes | bash ${DISTR_HOME}/bin/update.sh
 if [ -n "${timezone}" ]; then
   echo "export JAVA_PROPERTIES=\"-Duser.timezone=$timezone \$JAVA_PROPERTIES\"" >>/opt/atsd/conf/atsd-env.sh
 fi
+# Set DB profile to FINANCE
+echo "export JAVA_PROPERTIES=\"-Dprofile=FINANCE \$JAVA_PROPERTIES\"" >>/opt/atsd/conf/atsd-env.sh
 
 ${DISTR_HOME}/bin/atsd-tsd.sh start
 
